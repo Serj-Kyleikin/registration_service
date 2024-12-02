@@ -1,0 +1,344 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Hint Service",
+        "contact": {
+            "email": ""
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/api/registration": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Регистрация пользователя",
+                "operationId": "ApiV1Registration",
+                "parameters": [
+                    {
+                        "name": "Accept",
+                        "in": "header",
+                        "description": "Accept",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "application/json"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "gender"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "Почта",
+                                        "type": "string",
+                                        "example": "client@site.ru"
+                                    },
+                                    "password": {
+                                        "description": "Пароль",
+                                        "type": "string",
+                                        "example": "1jd5asd68d"
+                                    },
+                                    "gender": {
+                                        "description": "Пол",
+                                        "type": "string",
+                                        "example": "m"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Регистрация успешна",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "format": "array",
+                                            "default": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "format": "array",
+                                            "default": "The user has been successfully registered"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/AuthTokenDataVirtualModel"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Content",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegistrationUnprocessableContentResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "Получить данные пользователя",
+                "operationId": "ApiV1ProfileIndex",
+                "responses": {
+                    "200": {
+                        "description": "Получены данные пользователя",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProfileIndexResourse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "format": "array",
+                                            "default": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RegistrationRequest": {
+                "description": "Регистрация нового пользователя",
+                "properties": {
+                    "email": {
+                        "title": "email",
+                        "description": "Почта",
+                        "type": "string",
+                        "example": "client@site.ru"
+                    },
+                    "password": {
+                        "title": "password",
+                        "description": "Пароль",
+                        "type": "string",
+                        "example": "1k4g9asd"
+                    },
+                    "gender": {
+                        "title": "gender",
+                        "description": "Логин",
+                        "type": "string",
+                        "example": "m"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "description": "ID пользователя",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "email": {
+                        "description": "Email пользователя",
+                        "type": "string",
+                        "example": "admin@site.ru"
+                    },
+                    "gender": {
+                        "description": "Пол",
+                        "type": "string",
+                        "example": "Мужчина"
+                    }
+                },
+                "type": "object"
+            },
+            "RegistrationUnprocessableContentResource": {
+                "title": "RegistrationUnprocessableContentResource",
+                "description": "Unprocessable content resource",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The field is required (and 2 more error)"
+                    },
+                    "errors": {
+                        "$ref": "#/components/schemas/RegistrationErrorsVirtualModel"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "RegistrationUnprocessableContentResource"
+                }
+            },
+            "AuthTokenDataVirtualModel": {
+                "title": "AuthTokenDataVirtualModel",
+                "description": "Auth Token Data Virtual Model",
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "T3|C3RtNI8baWXz5NfmotXuIpM2xOiKj1IfiCQ7jhLj3a8c82e6"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "AuthTokenDataVirtualModel"
+                }
+            },
+            "RegistrationErrorsVirtualModel": {
+                "title": "RegistrationErrorsVirtualModel",
+                "description": "Errors Virtual Model",
+                "properties": {
+                    "email": {
+                        "type": "array",
+                        "items": {
+                            "example": "The field email is required"
+                        }
+                    },
+                    "password": {
+                        "type": "array",
+                        "items": {
+                            "example": "The field password is required"
+                        }
+                    },
+                    "gender": {
+                        "type": "array",
+                        "items": {
+                            "example": "The field gender is required"
+                        }
+                    }
+                },
+                "type": "object",
+                "xml": {
+                    "name": "RegistrationErrorsVirtualModel"
+                }
+            },
+            "ProfileIndexResourse": {
+                "title": "ProfileIndexResourse",
+                "description": "Профиль пользователя",
+                "type": "object",
+                "xml": {
+                    "name": "ProfileIndexResourse"
+                },
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/StatusSuccessResponseTrait"
+                    },
+                    {
+                        "$ref": "#/components/schemas/MessageNullResponseTrait"
+                    },
+                    {
+                        "properties": {
+                            "data": {
+                                "description": "",
+                                "properties": {
+                                    "user": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "DataNullResponseTrait": {
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "description": "Данные в респонсе",
+                        "type": "string",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "MessageNullResponseTrait": {
+                "properties": {
+                    "message": {
+                        "title": "message",
+                        "description": "Сообщение в респонсе",
+                        "type": "string",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "StatusSuccessResponseTrait": {
+                "properties": {
+                    "status": {
+                        "title": "status",
+                        "description": "Статус респонса",
+                        "type": "string",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "",
+                "scheme": "bearer",
+                "in": "header",
+                "bearerAuth": "bearerAuth",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Регистрация пользователя"
+        },
+        {
+            "name": "Profile",
+            "description": "Операции с профилем"
+        }
+    ]
+}
