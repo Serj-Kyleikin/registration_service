@@ -183,7 +183,7 @@
                     "email": {
                         "description": "Email пользователя",
                         "type": "string",
-                        "example": "admin@site.ru"
+                        "example": "client@site.ru"
                     },
                     "gender": {
                         "description": "Пол",
