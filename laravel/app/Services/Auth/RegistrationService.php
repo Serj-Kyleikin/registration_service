@@ -8,7 +8,7 @@ use App\Models\{
 
 class RegistrationService
 {
-    public function registration(string $password, string $email, string $gender): array
+    public function registration(string $email, string $password, string $gender): array
     {
         $user = User::create([
             'email' => $email,
